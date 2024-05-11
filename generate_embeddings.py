@@ -29,7 +29,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer, util
 import pickle as pkl
 
-model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-mpnet-base-v2')
+model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
 
 with open("mhc_questions.txt", "r", encoding="utf-8") as f:
     texts = np.asarray(list(f))
