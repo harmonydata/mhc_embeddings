@@ -1,4 +1,4 @@
-'''
+"""
 MIT License
 
 Copyright (c) 2023 Ulster University (https://www.ulster.ac.uk).
@@ -22,21 +22,24 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+"""
 
-'''
-
-import numpy as np
-from sentence_transformers import SentenceTransformer, util
 import pickle as pkl
 
-model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
+import numpy as np
+from sentence_transformers import SentenceTransformer
 
 with open("mhc_questions.txt", "r", encoding="utf-8") as f:
-    texts = np.asarray(list(f))
+    mhc_questions_texts = np.asarray(list(f))
 
+# Generate MHC embeddings for Hugging Face
+for model_name in [
+    "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+]:
+    model = SentenceTransformer(model_name)
+    embeddings = model.encode(mhc_questions_texts)
 
-embeddings = model.encode(texts)
-
-embeddings_small = np.float16(embeddings)
-with open("mhc_embeddings.npy", "wb") as f:
-    pkl.dump(embeddings_small, f)
+    embeddings_small = np.float16(embeddings)
+    with open(f"mhc_embeddings_{model_name.replace('/', '-')}.npy", "wb") as f:
+        pkl.dump(embeddings_small, f)
